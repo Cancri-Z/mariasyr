@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÉLAN | Fashion Designer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a0a0a;
+            --secondary: #f5f5f5;
+            --accent: #e63946;
+            --gold: #d4af37;
+            --silver: #c0c0c0;
+            --transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: var(--primary);
+            color: var(--secondary);
+            overflow-x: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(20, 20, 20, 0.9) 0%, rgba(0, 0, 0, 1) 100%);
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 5px;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--gold);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .logo:hover::after {
+            transform: translateX(0);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        nav a {
+            color: var(--secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            position: relative;
+            padding: 5px 0;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Silk-like animated header */
+        .silk-header {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .silk-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(10, 10, 10, 0.9) 0%, 
+                rgba(20, 20, 30, 0.7) 30%, 
+                rgba(40, 10, 20, 0.8) 70%, 
+                rgba(10, 10, 10, 0.9) 100%);
+            z-index: 1;
+        }
+
+        .silk-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .silk-layer {
+            flex: 1 0 25%;
+            min-width: 25%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(212, 175, 55, 0.03) 0%, 
+                rgba(192, 192, 192, 0.05) 25%, 
+                rgba(230, 57, 70, 0.02) 50%, 
+                rgba(192, 192, 192, 0.05) 75%, 
+                rgba(212, 175, 55, 0.03) 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            transform-origin: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 7.5rem;
+            font-weight: 900;
+            letter-spacing: 12px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title span {
+            display: inline-block;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 15px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            position: relative;
+            opacity: 0.7;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 18px 50px;
+            border: 1px solid var(--gold);
+            color: var(--secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-cta:hover {
+            background: rgba(212, 175, 55, 0.1);
+            letter-spacing: 6px;
+        }
+
+        /* Collection Section */
+        .collection-section {
+            padding: 100px 50px;
+            position: relative;
+            background: rgba(5, 5, 5, 0.7);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+            font-weight: 400;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .collection-item {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .collection-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+            transform-origin: center;
+        }
+
+        .collection-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+            transform: translateY(50px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .collection-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+
+        .collection-desc {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .collection-item:hover .collection-img {
+            transform: scale(1.1);
+        }
+
+        .collection-item:hover .collection-overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Feature Section with animated background */
+        .feature-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .bg-image.active {
+            opacity: 1;
+        }
+
+        .feature-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .feature-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .feature-text {
+            font-size: 2.2rem;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-top: 30px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .signature::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 50px 40px;
+            position: relative;
+            background: var(--primary);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--secondary);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--gold);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--gold);
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .circle {
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+        }
+
+        .line {
+            height: 1px;
+            background: var(--gold);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scroll-text {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+            
+            .hero-title {
+                font-size: 3.5rem;
+                letter-spacing: 6px;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                letter-spacing: 8px;
+            }
+            
+            .collection-section,
+            footer {
+                padding: 60px 20px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">ÉLAN</a>
+        <nav>
+            <ul>
+                <li><a href="#">Collections</a></li>
+                <li><a href="#">Couture</a></li>
+                <li><a href="#">Studio</a></li>
+                <li><a href="#">Journal</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Silk-like animated header -->
+    <section class="silk-header">
+        <div class="silk-container" id="silkContainer">
+            <!-- Silk layers will be generated by JS -->
+        </div>
+        <div class="silk-overlay"></div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span id="title-1">É</span>
+                <span id="title-2">L</span>
+                <span id="title-3">E</span>
+                <span id="title-4">G</span>
+                <span id="title-5">A</span>
+                <span id="title-6">N</span>
+                <span id="title-7">C</span>
+                <span id="title-8">E</span>
+            </h1>
+            <p class="hero-subtitle">REDEFINING MODERN LUXURY</p>
+            <a href="#" class="hero-cta">Discover Collection</a>
+        </div>
+        
+        <div class="scroll-indicator">
+            <div class="scroll-text">SCROLL</div>
+            <div class="scroll-line" id="scrollLine"></div>
+        </div>
+        
+        <!-- Floating decorative elements -->
+        <div class="floating-element circle" style="top: 20%; left: 15%; width: 100px; height: 100px;"></div>
+        <div class="floating-element circle" style="top: 70%; left: 85%; width: 150px; height: 150px;"></div>
+        <div class="floating-element line" style="top: 40%; left: 10%; width: 200px;"></div>
+        <div class="floating-element line" style="top: 60%; left: 75%; width: 150px;"></div>
+    </section>
+    
+    <!-- Collection Section -->
+    <section class="collection-section">
+        <h2 class="section-title">Spring Collection</h2>
+        <div class="collection-grid">
+            <div class="collection-item">
+                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80" alt="Collection 1" class="collection-img">
+                <div class="collection-overlay">
+                    <h3 class="collection-name">Silk Radiance</h3>
+                    <p class="collection-desc">Evening gowns with hand-embroidered details and silk accents</p>
+                </div>
+            </div>
+            <div class="collection-item">
+                <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Collection 2" class="collection-img">
+                <div class="collection-overlay">
+                    <h3 class="collection-name">Urban Minimal</h3>
+                    <p class="collection-desc">Contemporary silhouettes with structured tailoring</p>
+                </div>
+            </div>
+            <div class="collection-item">
+                <img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80" alt="Collection 3" class="collection-img">
+                <div class="collection-overlay">
+                    <h3 class="collection-name">Vintage Charm</h3>
+                    <p class="collection-desc">Classic styles reimagined with modern fabrics</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Feature Section with animated background -->
+    <section class="feature-section">
+        <div class="bg-container" id="bgContainer">
+            <div class="bg-image active" style="background-image: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')"></div>
+            <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')"></div>
+            <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')"></div>
+            <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1516762689617-e1cffcef479d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')"></div>
+        </div>
+        <div class="feature-overlay"></div>
+        <div class="feature-content">
+            <p class="feature-text">"Fashion is the armor to survive the reality of everyday life. I don't design clothes. I design dreams."</p>
+            <div class="signature">Isabelle Laurent</div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3 class="footer-title">Élan</h3>
+                <p>Creating visionary fashion since 2008. Based in Paris with ateliers in Milan and Tokyo.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-vimeo"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title">Collections</h3>
+                <div class="footer-links">
+                    <a href="#">Spring/Summer 2023</a>
+                    <a href="#">Fall/Winter 2022</a>
+                    <a href="#">Capsule Collections</a>
+                    <a href="#">Bridal</a>
+                    <a href="#">Accessories</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title">Ateliers</h3>
+                <div class="footer-links">
+                    <a href="#">Paris</a>
+                    <a href="#">Milan</a>
+                    <a href="#">Tokyo</a>
+                    <a href="#">New York</a>
+                    <a href="#">Bespoke Appointments</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title">Contact</h3>
+                <div class="footer-links">
+                    <a href="#">Press Inquiries</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Client Services</a>
+                    <a href="#">+33 1 40 20 50 60</a>
+                    <a href="#">contact@elan-paris.com</a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 Élan Haute Couture. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create silk layers
+            const silkContainer = document.getElementById('silkContainer');
+            for (let i = 0; i < 16; i++) {
+                const layer = document.createElement('div');
+                layer.classList.add('silk-layer');
+                silkContainer.appendChild(layer);
+            }
+            
+            // Silk wave animation
+            const silkAnimation = anime({
+                targets: '.silk-layer',
+                translateY: function() {
+                    return anime.random(-50, 50);
+                },
+                scaleY: function() {
+                    return 1 + anime.random(-0.2, 0.2);
+                },
+                duration: function() {
+                    return anime.random(3000, 5000);
+                },
+                delay: function(el, i) {
+                    return i * 100;
+                },
+                direction: 'alternate',
+                loop: true,
+                easing: 'easeInOutSine'
+            });
+            
+            // Title letter animation
+            const titleLetters = document.querySelectorAll('.hero-title span');
+            anime({
+                targets: titleLetters,
+                translateY: [50, 0],
+                opacity: [0, 1],
+                duration: 1200,
+                delay: anime.stagger(150),
+                easing: 'easeOutExpo'
+            });
+            
+            // Subtitle animation
+            anime({
+                targets: '.hero-subtitle',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 1500,
+                delay: 1000,
+                easing: 'easeOutExpo'
+            });
+            
+            // Button animation
+            anime({
+                targets: '.hero-cta',
+                translateY: [40, 0],
+                opacity: [0, 1],
+                duration: 1200,
+                delay: 1500,
+                easing: 'easeOutExpo'
+            });
+            
+            // Scroll indicator animation
+            anime({
+                targets: '#scrollLine',
+                height: [0, 60],
+                opacity: [0, 1],
+                duration: 1500,
+                delay: 2000,
+                easing: 'easeOutExpo',
+                loop: true,
+                direction: 'alternate'
+            });
+            
+            // Collection item animations on scroll
+            const collectionItems = document.querySelectorAll('.collection-item');
+            collectionItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(50px)';
+                
+                // Set up intersection observer
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            anime({
+                                targets: item,
+                                opacity: 1,
+                                translateY: 0,
+                                duration: 1000,
+                                delay: index * 200,
+                                easing: 'easeOutExpo'
+                            });
+                            observer.unobserve(item);
+                        }
+                    });
+                }, { threshold: 0.2 });
+                
+                observer.observe(item);
+            });
+            
+            // Floating elements animation
+            const floatingElements = document.querySelectorAll('.floating-element');
+            floatingElements.forEach(el => {
+                const duration = anime.random(8000, 15000);
+                const delay = anime.random(0, 2000);
+                
+                anime({
+                    targets: el,
+                    translateY: function() {
+                        return anime.random(-30, 30);
+                    },
+                    translateX: function() {
+                        return anime.random(-20, 20);
+                    },
+                    rotate: function() {
+                        return anime.random(-10, 10);
+                    },
+                    duration: duration,
+                    delay: delay,
+                    direction: 'alternate',
+                    loop: true,
+                    easing: 'easeInOutSine'
+                });
+            });
+            
+            // Animated background for feature section
+            const bgImages = document.querySelectorAll('.bg-image');
+            let currentIndex = 0;
+            
+            function changeBackground() {
+                // Remove active class from current image
+                bgImages[currentIndex].classList.remove('active');
+                
+                // Move to next image
+                currentIndex = (currentIndex + 1) % bgImages.length;
+                
+                // Add active class to next image
+                bgImages[currentIndex].classList.add('active');
+                
+                // Schedule next change
+                setTimeout(changeBackground, 5000);
+            }
+            
+            // Start the background animation
+            setTimeout(changeBackground, 5000);
+            
+            // Signature animation
+            anime({
+                targets: '.signature',
+                opacity: [0, 1],
+                translateX: [-30, 0],
+                duration: 1200,
+                delay: 800,
+                easing: 'easeOutExpo',
+                scrollContainer: '.feature-section'
+            });
+            
+            // Navigation animation on scroll
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 100) {
+                    header.style.backgroundColor = 'rgba(10, 10, 10, 0.9)';
+                    header.style.padding = '15px 50px';
+                } else {
+                    header.style.backgroundColor = 'transparent';
+                    header.style.padding = '25px 50px';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

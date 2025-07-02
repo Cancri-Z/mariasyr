@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maria Syr - Skräddarsydd sömnad i Malmö</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --gold: #d4af37;
+            --cream: #f5f5f0;
+            --light-gold: rgba(212, 175, 55, 0.2);
+            --transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--black);
+            color: var(--cream);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--gold);
+            mix-blend-mode: difference;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+        }
+
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: 
+                transform 0.4s ease,
+                width 0.3s ease,
+                height 0.3s ease;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            background-color: rgba(10, 10, 10, 0.9);
+            padding: 15px 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif, Georgia, 'Times New Roman', Times;
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 5px;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--gold);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .logo:hover::after {
+            transform: translateX(0);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        nav a {
+            color: var(--cream);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            position: relative;
+            padding: 5px 0;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            opacity: 1;
+            color: var(--gold);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .silk-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .silk-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(212, 175, 55, 0.02) 0%, 
+                rgba(212, 175, 55, 0.05) 50%, 
+                rgba(212, 175, 55, 0.02) 100%);
+            transform-origin: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(10, 10, 10, 0.9) 0%, 
+                rgba(20, 20, 30, 0.7) 30%, 
+                rgba(40, 10, 20, 0.8) 70%, 
+                rgba(10, 10, 10, 0.9) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 400;
+            letter-spacing: 8px;
+            margin-bottom: 2rem;
+            position: relative;
+            color: var(--gold);
+        }
+
+        .hero-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .hero-services {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 30px;
+            border-radius: 5px;
+            width: 250px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, var(--light-gold), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .service-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        /* Gold Dust Particles */
+        .particle {
+            position: absolute;
+            background-color: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 50px;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+            color: var(--gold);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .service-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 40px;
+            border-radius: 5px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .service-item h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+
+        .service-item ul {
+            list-style: none;
+        }
+
+        .service-item li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .service-item li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+        }
+
+        /* Image hover effect */
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            transition: var(--transition);
+            display: block;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .image-container:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .image-overlay h3,
+        .image-overlay p {
+            color: white;
+        }
+
+        /* About Section */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-image {
+            flex: 1;
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 40px;
+            border-radius: 5px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gold);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--cream);
+            font-family: 'Raleway', sans-serif;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .submit-btn {
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 12px 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Raleway', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 5px;
+        }
+
+        .submit-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            letter-spacing: 3px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 50px 40px;
+            background: rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--gold);
+            color: var(--black);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+            .hero-text {
+                font-size: 1rem;
+            }
+
+            .hero-services {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            section {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Header -->
+    <header id="main-header">
+        <a href="#" class="logo">MARIA SYR</a>
+        <nav>
+            <ul>
+                <li><a href="#home">Hem</a></li>
+                <li><a href="#services">Tjänster</a></li>
+                <li><a href="#pricing">Priser</a></li>
+                <li><a href="#about">Om mig</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="hero-title fade-in">Välkommen till MARIA SYR</h1>
+            <p class="hero-text fade-in">
+                Jag heter Maria Engdahl och har över 40 års erfarenhet av sömnad, design och textilt hantverk. 
+                Hos mig får du hjälp med allt från ändringar och lagningar till specialbeställningar – alltid med 
+                stor noggrannhet, kvalitet och kärlek till detaljer.
+            </p>
+            <div class="hero-services">
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <h3 class="service-title">Ändringar</h3>
+                    <p>Perfekt passform för dina plagg</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3 class="service-title">Reparationer</h3>
+                    <p>Ge dina favoritplagg nytt liv</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-ruler-combined"></i>
+                    </div>
+                    <h3 class="service-title">Skräddarsytt</h3>
+                    <p>Unika plagg precis som du vill</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gold Dust Particles -->
+        <div id="particles-js"></div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section">
+        <div class="container">
+            <h2 class="section-title">Våra Tjänster</h2>
+            <div class="services-grid">
+                <div class="service-item fade-in">
+                    <h3>Ändrings- och reparationssömnad</h3>
+                    <ul>
+                        <li>Kortning/förlängning av byxor och kjolar</li>
+                        <li>Omsömnad av äldre plagg till något nytt och personligt</li>
+                        <li>In-/utsömnad av kläder</li>
+                        <li>Byta dragkedjor, knappar, laga hål</li>
+                        <li>Förbättring av passform</li>
+                    </ul>
+                </div>
+                <div class="service-item fade-in">
+                    <h3>Inredningstextilier</h3>
+                    <ul>
+                        <li>Gardiner</li>
+                        <li>Kuddfodral, överkast</li>
+                        <li>Tygservetter</li>
+                    </ul>
+                </div>
+                <div class="service-item fade-in">
+                    <h3>Skräddarsydd sömnad</h3>
+                    <ul>
+                        <li>Omsömnad av vintage- eller second hand-plagg</li>
+                        <li>Skräddarsydda plagg från grunden</li>
+                        <li>Specialbeställningar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="image-container fade-in">
+                <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Tailoring work">
+                <div class="image-overlay">
+                    <h3>Handgjord kvalitet</h3>
+                    <p>Varje stycke skapat med omsorg och precision</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section">
+        <div class="container">
+            <h2 class="section-title">Prislista</h2>
+            <div class="pricing-content fade-in">
+                <p>
+                    Priser från:<br>
+                    Skräddarsyddt plagg: offert efter önskemål<br>
+                    Alla priser är ungefärliga – kontakta mig gärna för ett kostnadsförslag.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">Om mig</h2>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <p>
+                        Jag heter Maria Engdahl och har sytt i mer än 40 år – både som passion och yrke.
+                        Min styrka ligger i noggrant hantverk, förståelse för material, och förmågan att skapa personliga lösningar.
+                    </p>
+                    <p>
+                        Jag tror på hållbart skapande och ser glädjen i att ge gamla plagg nytt liv eller skapa något helt från grunden.
+                        Jag finns i Malmö, och du är varmt välkommen att höra av dig på email eller sms.
+                    </p>
+                </div>
+                <div class="about-image fade-in">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80" alt="Maria Engdahl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Kontakt</h2>
+            <div class="contact-grid">
+                <div class="contact-info fade-in">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h3>Maria Engdahl</h3>
+                            <p>Skräddare i Malmö</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>E-post</h3>
+                            <p>maria@mariasyr.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3>Telefon/SMS</h3>
+                            <p>072-244 18 02</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Adress</h3>
+                            <p>Malmö, Sverige</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form fade-in">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Namn</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-post</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Meddelande</label>
+                            <textarea id="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Skicka</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-pinterest"></i></a>
+        </div>
+        <p class="copyright">
+            &copy; 2023 Maria Syr. Alla rättigheter reserverade.
+        </p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Custom Cursor
+            const cursor = document.querySelector('.cursor');
+            const cursorFollower = document.querySelector('.cursor-follower');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                
+                // Delayed follower effect
+                setTimeout(() => {
+                    cursorFollower.style.left = e.clientX + 'px';
+                    cursorFollower.style.top = e.clientY + 'px';
+                }, 100);
+            });
+            
+            // Cursor hover effects
+            const hoverElements = document.querySelectorAll('a, button, .service-card, .image-container');
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                    cursor.style.opacity = '0.5';
+                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(2.5)';
+                });
+                
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                    cursor.style.opacity = '1';
+                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+                });
+            });
+            
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                const header = document.getElementById('main-header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            // Gold dust particles
+            function createParticles() {
+                const particlesContainer = document.querySelector('.hero');
+                
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Random properties
+                    const size = Math.random() * 5 + 1;
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = Math.random() * window.innerHeight;
+                    const delay = Math.random() * 5;
+                    const duration = Math.random() * 10 + 5;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${posX}px`;
+                    particle.style.top = `${posY}px`;
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    // Animate particles
+                    anime({
+                        targets: particle,
+                        translateX: function() {
+                            return anime.random(-100, 100);
+                        },
+                        translateY: function() {
+                            return anime.random(-100, 100);
+                        },
+                        opacity: function() {
+                            return anime.random(0.1, 0.5);
+                        },
+                        duration: duration * 1000,
+                        delay: delay * 1000,
+                        easing: 'linear',
+                        loop: true,
+                        direction: 'alternate'
+                    });
+                }
+            }
+            
+            createParticles();
+            
+            // Scroll animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            document.querySelectorAll('.fade-in').forEach(el => {
+                gsap.from(el, {
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 0,
+                    y: 50,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            });
+            
+            // Image hover gold dust effect
+            document.querySelectorAll('.image-container').forEach(container => {
+                container.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Create gold particle
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.style.width = '3px';
+                    particle.style.height = '3px';
+                    particle.style.left = `${x}px`;
+                    particle.style.top = `${y}px`;
+                    particle.style.backgroundColor = 'var(--gold)';
+                    particle.style.opacity = '0.8';
+                    
+                    this.appendChild(particle);
+                    
+                    // Animate and remove
+                    anime({
+                        targets: particle,
+                        translateY: function() {
+                            return anime.random(-20, 20);
+                        },
+                        translateX: function() {
+                            return anime.random(-20, 20);
+                        },
+                        opacity: 0,
+                        duration: 1000,
+                        easing: 'easeOutExpo',
+                        complete: function() {
+                            particle.remove();
+                        }
+                    });
+                });
+            });
+            
+            // Silk-like background animation for hero section
+            const silkContainer = document.createElement('div');
+            silkContainer.className = 'silk-container';
+            document.querySelector('.hero').prepend(silkContainer);
+            
+            for (let i = 0; i < 16; i++) {
+                const layer = document.createElement('div');
+                layer.classList.add('silk-layer');
+                silkContainer.appendChild(layer);
+            }
+            
+            anime({
+                targets: '.silk-layer',
+                translateY: function() {
+                    return anime.random(-50, 50);
+                },
+                scaleY: function() {
+                    return 1 + anime.random(-0.2, 0.2);
+                },
+                duration: function() {
+                    return anime.random(3000, 5000);
+                },
+                delay: function(el, i) {
+                    return i * 100;
+                },
+                direction: 'alternate',
+                loop: true,
+                easing: 'easeInOutSine'
+            });
+        });
+    </script>
+</body>
+</html>
