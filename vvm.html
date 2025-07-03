@@ -213,6 +213,7 @@
             position: relative;
             overflow: hidden;
             min-height: 400px;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap highlight on iOS */
         }
         
         .service-card::before {
@@ -264,6 +265,49 @@
             position: absolute;
             left: 0;
             color: var(--gold);
+        }
+
+        /* Gold Dust Particles */
+        @keyframes gold-dust-fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+        }
+
+        .service-card:hover .gold-dust {
+            display: block;
+        }
+
+        .gold-dust {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: gold-dust-fall 2s ease-out forwards;
+            pointer-events: none;
+            z-index: 1;
+            will-change: transform, opacity;
+        }
+
+        @keyframes glitter {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        .service-card:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            animation: glitter 0.8s ease-out;
+            pointer-events: none;
         }
         
         /* product-section */
@@ -732,7 +776,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2023 MARIA SYR. Alla rättigheter reserverade.</p>
+        <p>&copy; 2025 MARIA SYR. Alla rättigheter reserverade.</p>
     </footer>
 
     <script>
@@ -838,7 +882,35 @@
             
             window.addEventListener('scroll', animateOnScroll);
             animateOnScroll(); // Initialize
-            
+
+            // Gold Dust Effect (Works on Hover and Tap)
+            document.querySelectorAll('.service-card').forEach(card => {
+                // Function to create gold dust
+                const createGoldDust = () => {
+                    for (let i = 0; i < 20; i++) {
+                        const dust = document.createElement('div');
+                        dust.classList.add('gold-dust');
+                        dust.style.left = `${Math.random() * 100}%`;
+                        dust.style.animationDelay = `${Math.random() * 0.5}s`;
+                        dust.style.width = `${2 + Math.random() * 3}px`;
+                        dust.style.height = dust.style.width;
+                        dust.style.opacity = Math.random() * 0.7;
+                        card.appendChild(dust);
+                        setTimeout(() => dust.remove(), 2000);
+                    }
+                };
+
+                // Desktop: Trigger on hover
+                card.addEventListener('mouseenter', createGoldDust);
+
+                // Mobile: Trigger on tap (touch devices)
+                card.addEventListener('click', function(e) {
+                    // Prevent accidental page navigation if card is a link
+                    e.preventDefault();
+                    createGoldDust();
+                });
+            });
+
             // Custom cursor effect
             const cursor = document.createElement('div');
             cursor.classList.add('custom-cursor');
