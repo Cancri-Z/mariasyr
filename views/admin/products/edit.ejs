@@ -1,0 +1,14 @@
+<form action="/api/products/<%= product._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="_method" value="PUT">
+  
+  <div class="form-group">
+    <label>Current Image:</label>
+    <img src="<%= product.image %>" class="current-image">
+  </div>
+
+  <input type="text" name="name" value="<%= product.name %>" required>
+  <input type="text" name="category" value="<%= product.category %>" required>
+  <input type="text" name="description" value="<%= product.description %>" required>
+  
+  <button type="submit" class="btn btn-primary">Update Product</button>
+</form>

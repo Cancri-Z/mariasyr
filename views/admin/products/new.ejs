@@ -1,0 +1,45 @@
+
+<div class="upload-product-container">
+  <h1>Add New Product</h1>
+  
+  <!-- Flash Messages (for success/error feedback) -->
+  <% if (messages.error) { %>
+    <div class="alert alert-danger"><%= messages.error %></div>
+  <% } %>
+  <% if (messages.success) { %>
+    <div class="alert alert-success"><%= messages.success %></div>
+  <% } %>
+
+  <!-- Product Form -->
+  <form action="/api/products" method="POST" enctype="multipart/form-data">
+
+    <!-- Name -->
+    <div class="form-group">
+      <label for="name">Product Name</label>
+      <input type="text" id="name" name="name" class="form-control" required>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" class="form-control" required></textarea>
+    </div>
+
+    <!-- Category -->
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input type="text" id="category" name="category" class="form-control" required>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="form-group">
+      <label for="image">Product Image</label>
+      <input type="file" id="image" name="image" accept="image/*" class="form-control-file">
+      <small class="text-muted">Only images (JPG, PNG, etc.) allowed.</small>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Create Product</button>
+    <a href="/admin/products" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>

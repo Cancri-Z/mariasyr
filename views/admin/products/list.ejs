@@ -1,0 +1,35 @@
+
+<div class="action-bar">
+  <h1><%= title %></h1>
+  <a href="/admin/products/new" class="btn btn-primary">+ New Product</a>
+</div>
+
+<% if (messages.success) { %>
+  <div class="alert alert-success"><%= messages.success %></div>
+<% } %>
+
+<table class="product-table">
+  <!-- Table headers -->
+  <tr>
+    <td>Image</td>
+    <td>Name</td>
+    <td>Category</td>
+    <td>Description</td>
+    <td>Action</td>
+  </tr>
+  <% products.forEach(product => { %>
+    <tr>
+      <td><img src="<%= product.image %>" class="product-thumb"></td>
+      <td><%= product.name %></td>
+      <td><%= product.category %></td>
+      <td><%= product.description %></td>
+      <td>
+        <a href="/admin/products/edit/<%= product._id %>" class="btn btn-sm">Edit</a>
+        <form action="/api/products/<%= product._id %>?_method=DELETE" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-sm btn-danger" 
+                  onclick="return confirm('Delete this product?')">Delete</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+</table>

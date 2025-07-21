@@ -1,0 +1,48 @@
+client-project/
+├── .github/                   # GitHub configuration
+│   ├── workflows/             # CI/CD pipelines
+│   └── ISSUE_TEMPLATE/        # Standardized issue templates
+├── config/                    # Configuration files
+│   ├── env/                   # Environment configurations
+│   │   ├── development.env
+│   │   ├── production.env
+│   │   └── test.env
+│   └── constants.js           # Application constants
+├── docs/                      # Project documentation
+│   ├── ARCHITECTURE.md
+│   ├── API_DOCS.md
+│   └── CHANGELOG.md
+├── src/                       # Main application source
+│   ├── app/                   # Core application logic
+│   │   ├── controllers/       # Route controllers
+│   │   ├── middleware/        # Custom middleware
+│   │   ├── models/            # Data models
+│   │   ├── routes/            # Route definitions
+│   │   └── services/          # Business logic
+│   ├── config/                # Runtime configuration
+│   │   ├── database.js        # DB connection
+│   │   └── server.js          # Server config
+│   ├── utils/                 # Utilities/helpers
+│   ├── validators/            # Validation schemas
+│   ├── app.js                 # Main app initialization
+│   └── server.js              # Server entry point
+├── tests/                     # All test files
+│   ├── unit/                  # Unit tests
+│   ├── integration/           # Integration tests
+│   ├── fixtures/              # Test fixtures
+│   └── e2e/                   # End-to-end tests
+├── .dockerignore              # Files to ignore in Docker
+├── .editorconfig              # Consistent editor config
+├── .env.example               # Environment template
+├── .eslintignore              # ESLint ignore rules
+├── .eslintrc.js               # ESLint configuration
+├── .gitignore                 # Git ignore rules
+├── .nvmrc                     # Node version manager config
+├── .prettierrc                # Prettier formatting config
+├── Dockerfile                 # Docker configuration
+├── docker-compose.yml         # Multi-container setup
+├── jest.config.js             # Jest test configuration
+├── LICENSE                    # Project license
+├── package.json               # Project manifest
+├── README.md                  # Project documentation
+└── tsconfig.json              # TypeScript config (if using TS)
