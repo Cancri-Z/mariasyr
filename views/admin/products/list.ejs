@@ -1,3 +1,147 @@
+<style>
+body {
+  background-color: #333333e7;
+}
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.action-bar h1 {
+  color: #d4af37;
+  margin: 0;
+  font-weight: 600;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #252525;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-table tr:first-child {
+  background-color: #d4af37;
+  color: #121212;
+}
+
+.product-table tr:not(:first-child) {
+  border-bottom: 1px solid #333;
+  transition: background-color 0.3s ease;
+}
+
+.product-table tr:not(:first-child):hover {
+  background-color: #2e2e2e;
+}
+
+.product-table td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.product-table tr:first-child td {
+  font-weight: 600;
+  padding: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.product-thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+.text-muted {
+  color: #777;
+  font-style: italic;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  background-color: #d4af37;
+  color: #121212;
+}
+
+.btn-primary:hover {
+  background-color: #c9a227;
+  transform: translateY(-2px);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.btn-danger {
+  background-color: #5c1a1a;
+  color: #ff6b6b;
+}
+
+.btn-danger:hover {
+  background-color: #6b1a1a;
+  color: #ff7b7b;
+}
+
+.alert-success {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: #1a2d1a;
+  border-left: 4px solid #6bff6b;
+  color: #6bff6b;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Action buttons container */
+.product-table td:last-child {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .product-table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .product-thumb {
+    width: 40px;
+    height: 40px;
+  }
+}
+</style>
 
 <div class="action-bar">
   <h1><%= title %></h1>
@@ -19,7 +163,15 @@
   </tr>
   <% products.forEach(product => { %>
     <tr>
-      <td><img src="<%= product.image %>" class="product-thumb"></td>
+      <td>
+        <% if (product.images && product.images.length > 0) { %>
+          <img src="<%= product.images.find(img => img.isMain)?.url || product.images[0].url %>" 
+               class="product-thumb" 
+               alt="<%= product.name %>">
+        <% } else { %>
+          <span class="text-muted">No image</span>
+        <% } %>
+      </td>
       <td><%= product.name %></td>
       <td><%= product.category %></td>
       <td><%= product.description %></td>
