@@ -1,5 +1,5 @@
-        /* Global Styles */
-        :root {
+                /* Global Styles */
+                :root {
             --black: #121212;
             --gold: #D4AF37;
             --cream: #F5F5DC;
@@ -172,9 +172,9 @@
             align-items: center;
             text-align: center;
             position: relative;
-            overflow: hidden;
-            height: 100vh;
-            padding: 400px 10% 0;
+            padding: 20vh 10% 10vh;
+            height: auto;
+            min-height: 100vh;
         }
         
         .hero::before {
@@ -184,7 +184,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(18, 18, 18, 0.7), rgba(18, 18, 18, 0.9));
+            background: linear-gradient(rgba(18, 18, 18, 0.4), rgba(18, 18, 18, 0.7));
             z-index: -1;
         }
         
@@ -201,12 +201,14 @@
         
         .hero h1 {
             font-size: 4.5rem;
-            margin-bottom: 20px;
             color: var(--gold);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 1s forwards 0.5s;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
         }
         
         .hero-logo {
@@ -226,6 +228,12 @@
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 1s forwards 0.8s;
+            color: var(--gold);
+            color: #fff;
+            font-weight: 400;
+            position: relative;
+            padding: 1.5rem;
+            max-width: 800px;
         }
         
         .btn {
@@ -404,7 +412,7 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23D4AF37" d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>'), auto;
             border-radius: 10px;
             overflow: hidden;
-            max-width: 150px;
+            max-width: 250px;
         }
 
         .product-card:hover {
@@ -1106,3 +1114,4 @@
                 gap: 30px;
             }
         }
+
