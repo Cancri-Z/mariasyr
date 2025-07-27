@@ -153,6 +153,68 @@ input[type="file"]:focus {
     margin-left: 0;
   }
 }
+
+
+/* FOR IMAGE PREVIEWS */
+.image-previews-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.image-preview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-index {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.main-badge {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: #d4af37; /* Gold color */
+  color: #333;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+  .image-previews-container {
+    gap: 8px;
+  }
+  
+  .image-preview {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+
+
 </style>
 
 <div class="upload-product-container">
@@ -201,6 +263,7 @@ input[type="file"]:focus {
       >      
       <small class="text-muted">First image will be used as the main display image</small>
     </div>
+    <div id="imagePreviews" class="image-previews-container"></div>
     <div id="fileError" class="text-danger"></div>
 
     <!-- Submit Button -->
@@ -212,12 +275,60 @@ input[type="file"]:focus {
 <script>
   function validateFiles() {
     const input = document.getElementById('productImages');
+    const previewContainer = document.getElementById('imagePreviews');
     const errorDiv = document.getElementById('fileError');
     errorDiv.textContent = '';
-    
-    if (input.files.length > 4) {
+
+  // Clear previous previews and errors
+  previewContainer.innerHTML = '';
+  errorDiv.textContent = '';
+  
+  const files = input.files;
+  if (input.files.length > 4) {
       errorDiv.textContent = 'Maximum 4 images allowed';
       input.value = ''; // Clear selection
     }
+
+  // Validate file count
+  if (files.length > 4) {
+    errorDiv.textContent = 'Maximum 4 images allowed';
+    input.value = '';
+    return;
   }
+  
+  // Validate each file
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    
+    // Check file type
+    if (!file.type.match('image.*')) {
+      errorDiv.textContent = 'Only image files are allowed';
+      input.value = '';
+      previewContainer.innerHTML = '';
+      return;
+    }
+    
+    // Check file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      errorDiv.textContent = 'Each image must be less than 5MB';
+      input.value = '';
+      previewContainer.innerHTML = '';
+      return;
+    }
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const previewDiv = document.createElement('div');
+      previewDiv.className = 'image-preview';
+      previewDiv.innerHTML = `
+        <img src="${e.target.result}" alt="Preview ${i + 1}">
+        <span class="preview-index">${i + 1}</span>
+        ${i === 0 ? '<span class="main-badge">Main</span>' : ''}
+      `;
+      previewContainer.appendChild(previewDiv);
+    };
+    reader.readAsDataURL(file);
+  }
+}
 </script>
