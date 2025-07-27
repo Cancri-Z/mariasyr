@@ -1,147 +1,330 @@
-<style>
-body {
-  background-color: #333333e7;
-}
-
-.action-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #333;
-}
-
-.action-bar h1 {
-  color: #d4af37;
-  margin: 0;
-  font-weight: 600;
-}
-
-.product-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #252525;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.product-table tr:first-child {
-  background-color: #d4af37;
-  color: #121212;
-}
-
-.product-table tr:not(:first-child) {
-  border-bottom: 1px solid #333;
-  transition: background-color 0.3s ease;
-}
-
-.product-table tr:not(:first-child):hover {
-  background-color: #2e2e2e;
-}
-
-.product-table td {
-  padding: 1rem;
-  vertical-align: middle;
-}
-
-.product-table tr:first-child td {
-  font-weight: 600;
-  padding: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.9rem;
-}
-
-.product-thumb {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 4px;
-  border: 1px solid #444;
-}
-
-.text-muted {
-  color: #777;
-  font-style: italic;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.85rem;
-}
-
-.btn-primary {
-  background-color: #d4af37;
-  color: #121212;
-}
-
-.btn-primary:hover {
-  background-color: #c9a227;
-  transform: translateY(-2px);
-}
-
-.btn-sm {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-}
-
-.btn-danger {
-  background-color: #5c1a1a;
-  color: #ff6b6b;
-}
-
-.btn-danger:hover {
-  background-color: #6b1a1a;
-  color: #ff7b7b;
-}
-
-.alert-success {
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  background-color: #1a2d1a;
-  border-left: 4px solid #6bff6b;
-  color: #6bff6b;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Action buttons container */
-.product-table td:last-child {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+  body {
+    background-color: #333333e7;
+  }
+  
   .action-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333;
+  }
+  
+  .action-bar h1 {
+    color: #d4af37;
+    margin: 0;
+    font-weight: 600;
   }
   
   .product-table {
-    display: block;
-    overflow-x: auto;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #252525;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .product-table tr:first-child {
+    background-color: #d4af37;
+    color: #121212;
+  }
+  
+  .product-table tr:not(:first-child) {
+    border-bottom: 1px solid #333;
+    transition: background-color 0.3s ease;
+  }
+  
+  .product-table tr:not(:first-child):hover {
+    background-color: #2e2e2e;
+  }
+  
+  .product-table td {
+    padding: 1rem;
+    vertical-align: middle;
+  }
+  
+  .product-table tr:first-child td {
+    font-weight: 600;
+    padding: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+  }
+  
+  .values > td:nth-child(2),
+  .values > td:nth-child(3),
+  .values > td:nth-child(4) {
+    color: whitesmoke;
   }
   
   .product-thumb {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #444;
+  }
+  
+  .text-muted {
+    color: #777;
+    font-style: italic;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+  }
+  
+  .btn-primary {
+    background-color: #d4af37;
+    color: #121212;
+  }
+  
+  .btn-primary:hover {
+    background-color: #c9a227;
+    transform: translateY(-2px);
+  }
+  
+  .btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .btn-danger {
+    background-color: #5c1a1a;
+    color: #ff6b6b;
+  }
+  
+  .btn-danger:hover {
+    background-color: #6b1a1a;
+    color: #ff7b7b;
+  }
+  
+  .alert-success {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: #1a2d1a;
+    border-left: 4px solid #6bff6b;
+    color: #6bff6b;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  /* Action buttons container */
+  .product-table td:last-child {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .action-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .product-table {
+      display: block;
+      overflow-x: auto;
+    }
+    
+    .product-thumb {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  
+  /* IMAGE POPUP STYLES */
+.image-gallery-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #333333e7; /* Semi-transparent dark background */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gallery-popup-content {
+  background: #333;
+  width: 95%;
+  max-width: 900px;
+  max-height: 90vh;
+  padding: 1.5rem;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); /* Gold shadow */
+  border: 1px solid #d4af37; /* Gold border */
+}
+
+.close-gallery {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #d4af37; /* Gold color */
+  transition: transform 0.3s ease;
+}
+
+.close-gallery:hover {
+  transform: scale(1.2);
+}
+
+.main-gallery-image-container {
+  width: 100%;
+  height: 50vh;
+  margin-bottom: 1rem;
+  background: #333;
+}
+
+.main-gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.gallery-thumbnails {
+  display: flex;
+  gap: 0.8rem;
+  overflow-x: auto;
+  padding: 1rem 0.5rem;
+  margin: 0 -0.5rem;
+}
+
+.gallery-thumbnail {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.gallery-thumbnail:hover {
+  border-color: #d4af37; /* Gold on hover */
+  transform: translateY(-3px);
+}
+
+.gallery-thumbnail.active {
+  border-color: #d4af37; /* Gold border */
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.gallery-product-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d4af37; /* Gold separator */
+}
+
+.gallery-product-title {
+  color: #d4af37;
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.gallery-product-description {
+  color: #d4af37;
+  line-height: 1.5;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .gallery-popup-content {
+    width: 98%;
+    padding: 1rem;
+    max-height: 85vh;
+  }
+  
+  .main-gallery-image-container {
+    height: 40vh;
+  }
+  
+  .gallery-thumbnail {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .close-gallery {
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
   }
 }
-</style>
+
+@media (max-width: 480px) {
+  .main-gallery-image-container {
+    height: 35vh;
+  }
+  
+  .gallery-thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .gallery-product-title {
+    font-size: 1.2rem;
+  }
+  
+  .gallery-product-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* Make product images clickable */
+.clickable-image {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #ddd;
+}
+
+.clickable-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* Loading animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  border: 3px solid rgba(212, 175, 55, 0.3);
+  border-top: 3px solid #d4af37;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+  
+  </style>
+</head>
 
 <div class="action-bar">
   <h1><%= title %></h1>
@@ -162,12 +345,16 @@ body {
     <td>Action</td>
   </tr>
   <% products.forEach(product => { %>
-    <tr>
+    <tr class="values">
       <td>
         <% if (product.images && product.images.length > 0) { %>
-          <img src="<%= product.images.find(img => img.isMain)?.url || product.images[0].url %>" 
-               class="product-thumb" 
-               alt="<%= product.name %>">
+          <div class="product-image-container" 
+               data-images='<%= JSON.stringify(product.images) %>'
+               data-product='<%= JSON.stringify(product) %>'>
+            <img src="<%= product.images.find(img => img.isMain)?.url || product.images[0].url %>" 
+                 class="product-thumb clickable-image" 
+                 alt="<%= product.name %>">
+          </div>
         <% } else { %>
           <span class="text-muted">No image</span>
         <% } %>
@@ -184,4 +371,123 @@ body {
       </td>
     </tr>
   <% }) %>
+  <!-- IMAGE POPUP -->
+  <div class="image-gallery-popup">
+    <div class="gallery-popup-content">
+      <span class="close-gallery" title="close">&times;</span>
+      <div class="main-gallery-image-container">
+        <img src="" class="main-gallery-image" alt="">
+      </div>
+      <div class="gallery-thumbnails"></div>
+      <div class="gallery-product-info">
+        <h3 class="gallery-product-title"></h3>
+        <p class="gallery-product-description"></p>
+      </div>
+    </div>
+  </div>
 </table>
+
+<script>
+  // IMAGE GALLERY FUNCTION
+  document.addEventListener('DOMContentLoaded', function() {
+  // Click handler for product images
+  document.querySelectorAll('.clickable-image').forEach(img => {
+    img.addEventListener('click', function(e) {
+      const container = e.target.closest('.product-image-container');
+      const images = JSON.parse(container.dataset.images);
+      const product = JSON.parse(container.dataset.product);
+      
+      openImageGallery(images, product);
+    });
+  });
+
+  // Gallery functions
+  function openImageGallery(images, product) {
+    const galleryPopup = document.querySelector('.image-gallery-popup');
+    const mainImage = document.querySelector('.main-gallery-image');
+    const thumbnailsContainer = document.querySelector('.gallery-thumbnails');
+    const productTitle = document.querySelector('.gallery-product-title');
+    const productDescription = document.querySelector('.gallery-product-description');
+    
+    // Set main product info
+    productTitle.textContent = product.name;
+    productDescription.textContent = product.description;
+    
+    // Clear previous thumbnails
+    thumbnailsContainer.innerHTML = '';
+    
+    // Set first/main image
+    const primaryImage = images.find(img => img.isMain) || images[0];
+    mainImage.src = primaryImage.url;
+    mainImage.alt = product.name;
+    
+    // Create thumbnails
+    images.forEach((image, index) => {
+      const thumbnail = document.createElement('img');
+      thumbnail.src = image.url;
+      thumbnail.alt = `Thumbnail ${index + 1}`;
+      thumbnail.className = 'gallery-thumbnail';
+      if (image.url === primaryImage.url) {
+        thumbnail.classList.add('active');
+      }
+      
+      thumbnail.addEventListener('click', () => {
+        // Update main image
+        mainImage.src = image.url;
+        // Update active thumbnail
+        document.querySelectorAll('.gallery-thumbnail').forEach(t => t.classList.remove('active'));
+        thumbnail.classList.add('active');
+      });
+      
+      thumbnailsContainer.appendChild(thumbnail);
+    });
+    
+    // Show gallery
+    galleryPopup.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  
+  // Close gallery
+  document.querySelector('.close-gallery').addEventListener('click', closeGallery);
+  document.querySelector('.image-gallery-popup').addEventListener('click', function(e) {
+    if (e.target === this) closeGallery();
+  });
+  
+  function closeGallery() {
+    document.querySelector('.image-gallery-popup').style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
+  // Add touch support for mobile swiping
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const gallery = document.querySelector('.main-gallery-image-container');
+
+  if (gallery) {
+    gallery.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    gallery.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, {passive: true});
+  }
+
+  function handleSwipe() {
+    const images = document.querySelectorAll('.gallery-thumbnail');
+    const currentActive = document.querySelector('.gallery-thumbnail.active');
+    const currentIndex = Array.from(images).indexOf(currentActive);
+    
+    if (touchEndX < touchStartX - 50) { // Swipe left
+      const nextIndex = (currentIndex + 1) % images.length;
+      images[nextIndex].click();
+    }
+    
+    if (touchEndX > touchStartX + 50) { // Swipe right
+      const prevIndex = (currentIndex - 1 + images.length) % images.length;
+      images[prevIndex].click();
+    }
+  }
+});
+</script>
