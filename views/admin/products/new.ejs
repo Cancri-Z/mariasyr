@@ -1,334 +1,449 @@
-<style>
-body{
-  background-color: rgba(28, 11, 2, 0.894);
-  margin: auto;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Product</title>
+    <style>
+        body {
+            background-color: rgba(28, 11, 2, 0.894);
+            margin: auto;
+        }
 
-    .upload-product-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #1e1e1e;
-  border-radius: 8px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  border: 1px solid #333;
-}
+        .upload-product-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+        }
 
-.upload-product-container h1 {
-  color: #d4af37;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-weight: 600;
-  border-bottom: 2px solid #333;
-  padding-bottom: 1rem;
-}
+        .upload-product-container h1 {
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            border-bottom: 2px solid #333;
+            padding-bottom: 1rem;
+        }
 
-.alert {
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-.alert-danger {
-  background-color: #2d1a1a;
-  border-left: 4px solid #ff6b6b;
-  color: #ff6b6b;
-}
+        .alert-danger {
+            background-color: #2d1a1a;
+            border-left: 4px solid #ff6b6b;
+            color: #ff6b6b;
+        }
 
-.alert-success {
-  background-color: #1a2d1a;
-  border-left: 4px solid #6bff6b;
-  color: #6bff6b;
-}
+        .alert-success {
+            background-color: #1a2d1a;
+            border-left: 4px solid #6bff6b;
+            color: #6bff6b;
+        }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
 
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #d4af37;
-  font-weight: 500;
-}
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #d4af37;
+            font-weight: 500;
+        }
 
-.form-control {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #252525;
-  border: 1px solid #333;
-  border-radius: 4px;
-  color: #e0e0e0;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #252525;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
 
-.form-control:focus {
-  outline: none;
-  border-color: #d4af37;
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-}
+        .form-control:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
 
-textarea.form-control {
-  min-height: 120px;
-  resize: vertical;
-}
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
 
-input[type="file"] {
-  padding: 0.5rem;
-  background-color: #252525;
-  border: 1px dashed #444;
-  border-radius: 4px;
-  color: #aaa;
-}
+        input[type="file"] {
+            padding: 0.5rem;
+            background-color: #252525;
+            border: 1px dashed #444;
+            border-radius: 4px;
+            color: #aaa;
+        }
 
-input[type="file"]:focus {
-  border-color: #d4af37;
-  border-style: solid;
-}
+        input[type="file"]:focus {
+            border-color: #d4af37;
+            border-style: solid;
+        }
 
-.text-muted {
-  display: block;
-  margin-top: 0.5rem;
-  color: #777;
-  font-size: 0.85rem;
-}
+        .text-muted {
+            display: block;
+            margin-top: 0.5rem;
+            color: #777;
+            font-size: 0.85rem;
+        }
 
-.text-danger {
-  color: #ff6b6b;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-}
+        .text-danger {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
 
-.btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
 
-.btn-primary {
-  background-color: #d4af37;
-  color: #121212;
-}
+        .btn-primary {
+            background-color: #d4af37;
+            color: #121212;
+        }
 
-.btn-primary:hover {
-  background-color: #c9a227;
-  transform: translateY(-2px);
-}
+        .btn-primary:hover {
+            background-color: #c9a227;
+            transform: translateY(-2px);
+        }
 
-.btn-secondary {
-  background-color: #333;
-  color: #e0e0e0;
-  margin-left: 1rem;
-}
+        .btn-secondary {
+            background-color: #333;
+            color: #e0e0e0;
+            margin-left: 1rem;
+        }
 
-.btn-secondary:hover {
-  background-color: #444;
-  transform: translateY(-2px);
-}
+        .btn-secondary:hover {
+            background-color: #444;
+            transform: translateY(-2px);
+        }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .upload-product-container {
-    padding: 1.5rem;
-    margin: 1rem;
-  }
-  
-  .btn {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-  
-  .btn-secondary {
-    margin-left: 0;
-  }
-}
+        /* Image Previews */
+        .image-previews-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
 
+        .image-preview {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
-/* FOR IMAGE PREVIEWS */
-.image-previews-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
-}
+        .image-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
 
-.image-preview {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow: hidden;
-}
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+        .preview-index {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-size: 12px;
+            z-index: 2;
+        }
 
-.preview-index {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  padding: 2px 6px;
-  border-radius: 50%;
-  font-size: 12px;
-}
+        .main-badge {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: #d4af37;
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2;
+        }
 
-.main-badge {
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  background: #d4af37; /* Gold color */
-  color: #333;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 12px;
-  font-weight: bold;
-}
+        /* Remove Button */
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 3;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-/* Mobile responsive */
-@media (max-width: 576px) {
-  .image-previews-container {
-    gap: 8px;
-  }
-  
-  .image-preview {
-    width: 80px;
-    height: 80px;
-  }
-}
+        .remove-btn:hover {
+            background: #ff2222;
+            transform: scale(1.1);
+        }
 
+        .remove-btn:active {
+            transform: scale(0.95);
+        }
 
+        /* File count indicator */
+        .file-count {
+            color: #d4af37;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
 
-</style>
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .upload-product-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+            }
+        }
 
-<div class="upload-product-container">
-  <h1>Add New Product</h1>
-  
-  <!-- Flash Messages (for success/error feedback) -->
-  <% if (messages.error) { %>
-    <div class="alert alert-danger"><%= messages.error %></div>
-  <% } %>
-  <% if (messages.success) { %>
-    <div class="alert alert-success"><%= messages.success %></div>
-  <% } %>
+        @media (max-width: 576px) {
+            .image-previews-container {
+                gap: 8px;
+            }
+            
+            .image-preview {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .remove-btn {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-product-container">
+        <h1>Add New Product</h1>
+        
+        <!-- Flash Messages (for success/error feedback) -->
+        <div class="alert alert-success" style="display: none;" id="successAlert">Product added successfully!</div>
+        <div class="alert alert-danger" style="display: none;" id="errorAlert">Error message here</div>
 
-  <!-- Product Form -->
-  <form action="/api/products" method="POST" enctype="multipart/form-data">
+        <!-- Product Form -->
+        <form action="/api/products" method="POST" enctype="multipart/form-data">
 
-    <!-- Name -->
-    <div class="form-group">
-      <label for="name">Product Name</label>
-      <input type="text" id="name" name="name" class="form-control" required>
+            <!-- Name -->
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" required></textarea>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" id="category" name="category" class="form-control" required>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label>Product Images (Upload 1-4 images)</label>
+                <input 
+                    type="file" 
+                    name="image" 
+                    id="productImages"
+                    multiple 
+                    accept="image/*" 
+                    required
+                    onchange="handleFileSelect()"
+                >      
+                <small class="text-muted">First image will be used as the main display image</small>
+                <div id="fileCount" class="file-count"></div>
+            </div>
+            <div id="imagePreviews" class="image-previews-container"></div>
+            <div id="fileError" class="text-danger"></div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Create Product</button>
+            <a href="/admin/products/list" class="btn btn-secondary">Cancel</a>
+        </form>
     </div>
 
-    <!-- Description -->
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea id="description" name="description" class="form-control" required></textarea>
-    </div>
+    <script>
+        let selectedFiles = [];
+        let fileInput = document.getElementById('productImages');
 
-    <!-- Category -->
-    <div class="form-group">
-      <label for="category">Category</label>
-      <input type="text" id="category" name="category" class="form-control" required>
-    </div>
+        function handleFileSelect() {
+            const input = document.getElementById('productImages');
+            const files = Array.from(input.files);
+            
+            // Add new files to existing selection
+            files.forEach(file => {
+                if (selectedFiles.length < 4) {
+                    selectedFiles.push(file);
+                }
+            });
+            
+            validateAndPreviewFiles();
+        }
 
-    <!-- Image Upload -->
-    <div class="form-group">
-      <label>Product Images (Upload 1-4 images)</label>
-      <input 
-        type="file" 
-        name="newImages" 
-        id="productImages"
-        multiple 
-        accept="image/*" 
-        required
-        onchange="validateFiles()"
-      >      
-      <small class="text-muted">First image will be used as the main display image</small>
-    </div>
-    <div id="imagePreviews" class="image-previews-container"></div>
-    <div id="fileError" class="text-danger"></div>
+        function validateAndPreviewFiles() {
+            const previewContainer = document.getElementById('imagePreviews');
+            const errorDiv = document.getElementById('fileError');
+            const fileCountDiv = document.getElementById('fileCount');
+            
+            // Clear previous previews and errors
+            previewContainer.innerHTML = '';
+            errorDiv.textContent = '';
+            
+            // Update file count
+            fileCountDiv.textContent = `${selectedFiles.length} image(s) selected`;
+            
+            // Validate file count
+            if (selectedFiles.length > 4) {
+                errorDiv.textContent = 'Maximum 4 images allowed';
+                selectedFiles = selectedFiles.slice(0, 4);
+            }
+            
+            if (selectedFiles.length === 0) {
+                fileCountDiv.textContent = 'No images selected';
+                updateFileInput();
+                return;
+            }
+            
+            // Validate and preview each file
+            selectedFiles.forEach((file, index) => {
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    errorDiv.textContent = 'Only image files are allowed';
+                    removeFile(index);
+                    return;
+                }
+                
+                // Check file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    errorDiv.textContent = `Image "${file.name}" is too large (max 5MB)`;
+                    removeFile(index);
+                    return;
+                }
+                
+                // Create preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'image-preview';
+                    previewDiv.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <span class="preview-index">${index + 1}</span>
+                        ${index === 0 ? '<span class="main-badge">Main</span>' : ''}
+                        <button type="button" class="remove-btn" onclick="removeFile(${index})" title="Remove image">×</button>
+                    `;
+                    previewContainer.appendChild(previewDiv);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            updateFileInput();
+        }
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary">Create Product</button>
-    <a href="/admin/products/list" class="btn btn-secondary">Cancel</a>
-  </form>
-</div>
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            validateAndPreviewFiles();
+        }
 
-<script>
-  function validateFiles() {
-    const input = document.getElementById('productImages');
-    const previewContainer = document.getElementById('imagePreviews');
-    const errorDiv = document.getElementById('fileError');
-    errorDiv.textContent = '';
+        function updateFileInput() {
+            // Create a new DataTransfer object to update the file input
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => {
+                dt.items.add(file);
+            });
+            fileInput.files = dt.files;
+            
+            // Update required attribute based on file count
+            fileInput.required = selectedFiles.length === 0;
+        }
 
-  // Clear previous previews and errors
-  previewContainer.innerHTML = '';
-  errorDiv.textContent = '';
-  
-  const files = input.files;
-  if (input.files.length > 4) {
-      errorDiv.textContent = 'Maximum 4 images allowed';
-      input.value = ''; // Clear selection
-    }
-
-  // Validate file count
-  if (files.length > 4) {
-    errorDiv.textContent = 'Maximum 4 images allowed';
-    input.value = '';
-    return;
-  }
-  
-  // Validate each file
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    
-    // Check file type
-    if (!file.type.match('image.*')) {
-      errorDiv.textContent = 'Only image files are allowed';
-      input.value = '';
-      previewContainer.innerHTML = '';
-      return;
-    }
-    
-    // Check file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      errorDiv.textContent = 'Each image must be less than 5MB';
-      input.value = '';
-      previewContainer.innerHTML = '';
-      return;
-    }
-    
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const previewDiv = document.createElement('div');
-      previewDiv.className = 'image-preview';
-      previewDiv.innerHTML = `
-        <img src="${e.target.result}" alt="Preview ${i + 1}">
-        <span class="preview-index">${i + 1}</span>
-        ${i === 0 ? '<span class="main-badge">Main</span>' : ''}
-      `;
-      previewContainer.appendChild(previewDiv);
-    };
-    reader.readAsDataURL(file);
-  }
-}
-</script>
+        // Handle drag and drop (optional enhancement)
+        const uploadArea = document.getElementById('productImages');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#d4af37';
+        });
+        
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#444';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#444';
+            
+            const files = Array.from(e.dataTransfer.files);
+            files.forEach(file => {
+                if (selectedFiles.length < 4) {
+                    selectedFiles.push(file);
+                }
+            });
+            
+            validateAndPreviewFiles();
+        });
+    </script>
+</body>
+</html></document_content>
+</invoke>

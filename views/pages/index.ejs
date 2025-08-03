@@ -937,7 +937,7 @@
         /* About Section */
         .about {
             padding: 100px 10%;
-            background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.9)), url('https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.9)), url('/images/tailoring.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -1332,13 +1332,46 @@
                 </div>
             </div>
             <div class="contact-form">
-                <form id="contactForm">
-                    <input type="text" placeholder="Namn" required>
-                    <input type="email" placeholder="E-post" required>
-                    <input type="tel" placeholder="Telefon">
-                    <textarea placeholder="Meddelande" required></textarea>
-                    <button type="submit">Skicka meddelande</button>
+                <!-- Update your contact form to look like this -->
+                <form action="/contact" method="POST" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Namn *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-post *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Ämne</label>
+                        <input type="text" id="subject" name="subject">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Meddelande *</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Skicka meddelande</button>
                 </form>
+
+                <!-- Add this section to display flash messages -->
+                <div class="flash-messages">
+                <% if (typeof messages !== 'undefined') { %>
+                    <% if (messages.success) { %>
+                    <div class="alert alert-success">
+                        <%= messages.success %>
+                    </div>
+                    <% } %>
+                    <% if (messages.error) { %>
+                    <div class="alert alert-error">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+                <% } %>
+                </div>
             </div>
         </div>
     </section>
@@ -1352,7 +1385,7 @@
             <a href="#pricing">Priser</a>
             <a href="#about">Om mig</a>
             <a href="#contact">Kontakt</a>
-            <a href="#">Integritetspolicy</a>
+            <a href="/terms">Integritetspolicy</a> 
         </div>
         <div class="copyright">
             <p>&copy; 2025 MARIA SYR. Alla rättigheter reserverade.</p>

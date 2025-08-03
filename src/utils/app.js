@@ -1,49 +1,22 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const connectDB = require(path.join(__dirname, '../config/db'));
+const connectDB = require('../config/db');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
 const Product = require('../models/Product');
 const User = require('../models/User');
 const { isAdmin } = require('../middleware/auth');
 const multer = require('multer');
+const upload = multer({ dest: 'public/uploads/' });
 const expressLayouts = require('express-ejs-layouts');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
 const fs = require('fs');
 
-// Storage Configuration
-const storage = multer.diskStorage({
-  destination: 'public/uploads/',
-  filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
-  }
-});
-
-// Separate upload middlewares
-const uploadSingle = multer({ 
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
-}).single('image'); // For single image upload
-
-const uploadArray = multer({
-  storage: storage,
-  limits: {
-    files: 4, // Max 4 files
-    fileSize: 5 * 1024 * 1024, // 5MB per file
-    fileFilter: (req, file, cb) => {
-      // Only accept files with content
-      if (file.originalname === 'blob') {
-        return cb(new Error('Empty file detected'), false);
-      }
-      cb(null, true);
-    }
-  }
-}).array('newImages');
 
 // Database connection (immediately after dotenv)
 connectDB();
@@ -55,6 +28,14 @@ const app = express();
 // Middleware Setup
 // ======================
 app.use(express.json());
+
+// =====================================================================================
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
+});
+// =====================================================================================
+
 app.use(express.static(path.join(__dirname, '../../public'), { maxAge: '1y' }));
 
 // PARSE DATA FOR ALL FORMS
@@ -75,6 +56,28 @@ app.use(session({
   name: 'mariaFashion.sid' // Unique session name
 }));
 
+// ======================
+// EMAIL CONFIGURATION
+// ======================
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Using Gmail service
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Verify email connection
+transporter.verify((error, success) => {
+  if (error) {
+    console.log('Email configuration error:', error);
+  } else {
+    console.log('Email server is ready to send messages');
+  }
+});
+
+// ======================
+
 // FOR PUT/DELETE =======================
 app.use(methodOverride('_method'));
 
@@ -87,20 +90,42 @@ app.use(passport.session());
 
 // Passport local strategy
 passport.use(new LocalStrategy(
+  {
+    usernameField: 'username',
+    passwordField: 'password'
+  },
   async (username, password, done) => {
     try {
-      const user = await User.findOne({ username });
-      if (!user) return done(null, false, { message: 'Incorrect username.' });
+      console.log('Strategy executing with:', { username, password });
       
+      // Find user in database
+      const user = await User.findOne({ username: username });
+      console.log('User found:', user ? 'Yes' : 'No');
+      
+      if (!user) {
+        console.log('User not found');
+        return done(null, false, { message: 'Användarnamn eller lösenord är fel' });
+      }
+
+      // Check password
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return done(null, false, { message: 'Incorrect password.' });
+      console.log('Password match:', isMatch);
       
+      if (!isMatch) {
+        console.log('Password incorrect');
+        return done(null, false, { message: 'Användarnamn eller lösenord är fel' });
+      }
+
+      console.log('Authentication successful');
       return done(null, user);
-    } catch (err) {
-      return done(err);
+      
+    } catch (error) {
+      console.error('Strategy error:', error);
+      return done(error);
     }
   }
 ));
+
 
 // Replace existing serialize/deserialize with:
 passport.serializeUser((user, done) => {
@@ -197,238 +222,93 @@ app.get('/api/products/:id', async (req, res) => {
 
 // ================================
 // Create product route
-app.post('/api/products', isAdmin, (req, res) => {
-  uploadArray(req, res, async (err) => {
-    // Handle upload errors
-    if (err) {
-      let errorMessage = err.message;
-      if (err.code === 'LIMIT_UNEXPECTED_FILE') errorMessage = 'Maximum 4 images allowed';
-      if (err.code === 'LIMIT_FILE_SIZE') errorMessage = 'Each image must be <5MB';
+app.post('/api/products', isAdmin, upload.single('image'), async (req, res) => {
+  try {
+    const product = new Product({
+      name: req.body.name,
+      price: parseFloat(req.body.price),
+      description: req.body.description,
+      category: req.body.category,
+      stock: parseInt(req.body.stock) || 0,
+      image: req.file ? `/uploads/${req.file.filename}` : '/images/default-product.png'
+    });
 
-      // Cleanup any uploaded files
-      if (req.files?.length > 0) {
-        cleanupFiles(req.files);
-      }
 
-      req.flash('error', errorMessage);
-      return res.redirect('/admin/products/new');
-    }
+    const savedProduct = await product.save();
+    console.log('Saved Product:', savedProduct); // Debug after saving
 
-    // Filter out any empty files that might have come through
-    const validFiles = req.files?.filter(file => 
-      file.size > 0 && file.originalname !== 'blob'
-    ) || [];
-
-    try {
-      // Validate at least one image
-      if (validFiles.length === 0) {
-        req.flash('error', 'At least one valid image is required');
-        return res.redirect('/admin/products/new');
-      }
-
-      // Process images
-      const images = req.files.map((file, index) => ({
-        url: `/uploads/${file.filename}`,
-        isMain: index === 0
-      }));
-
-      // Validate required fields
-      const requiredFields = {
-        name: req.body.name?.trim(),
-        description: req.body.description?.trim(),
-        category: req.body.category?.trim()
-      };
-
-      // Check for missing required fields
-      for (const [field, value] of Object.entries(requiredFields)) {
-        if (!value && value !== 0) { // 0 is valid for price
-          throw new Error(`${field} is required`);
-        }
-      }
-
-      // Create and save product
-      const product = new Product({
-        ...requiredFields,
-        images: images,
-        stock: parseInt(req.body.stock) || 0
-      });
-
-      // Additional validation
-      await product.validate();
-
-      const savedProduct = await product.save();
-      console.log('Successfully saved product:', {
-        _id: savedProduct._id,
-        category: savedProduct.category
-      });
-
-      req.flash('success', 'Product created successfully!');
-      res.redirect('/admin/products/list');
-    } catch (error) {
-      // Cleanup uploaded files on error
-      if (req.files) {
-        cleanupFiles(req.files);
-      }
-
-      // Enhanced error reporting
-      const errorMessage = error.errors 
-        ? Object.values(error.errors).map(e => e.message).join(', ')
-        : error.message;
-
-      console.error('Product creation failed:', {
-        error: errorMessage,
-        receivedData: {
-          name: req.body.name,
-          category: req.body.category,
-        },
-        stack: error.stack
-      });
-
-      req.flash('error', errorMessage);
-      res.redirect('/admin/products/new');
-    }
-  });
+    req.flash('success', 'Product created successfully!');
+    res.redirect('/admin/products/list');
+  } catch (err) {
+    req.flash('error', err.message);
+    res.redirect('/admin/products/new');
+  }
 });
-
-// Helper function
-function cleanupFiles(files) {
-  files.forEach(file => {
-    try {
-      fs.unlinkSync(path.join(__dirname, '../../public/uploads', file.filename));
-    } catch (err) {
-      console.error('Error cleaning up file:', file.filename, err);
-    }
-  });
-}
 // ===========================
 
 // =================================
 // Update product
-app.put('/api/products/:id', isAdmin, (req, res) => {
-  uploadArray(req, res, async (err) => {
-    try {
-      // 1. Get current product
-      const product = await Product.findById(req.params.id);
-      if (!product) {
-        req.flash('error', 'Product not found');
-        return res.redirect('/admin/products');
-      }
-
-      // 2. Process image updates
-      const currentImages = product.images || [];
-      const imagesToKeep = req.body.keepImages || [];
-      const newMainImageId = req.body.mainImage;
-
-      // Calculate available slots
-      const availableSlots = Math.max(0, 4 - currentImages.length);
-      const newImagesCount = req.files?.length || 0;
-
-      if (newImagesCount > availableSlots) {
-        throw new Error(`You can only add ${availableSlots} more image(s)`);
-      }
-
-      // 3. Filter and update images
-      let updatedImages = currentImages.filter(img => 
-        imagesToKeep.includes(img._id.toString())
-      );
-
-      // 4. Add new images
-      if (req.files?.length > 0) {
-        const newImages = req.files.map(file => ({
-          url: `/uploads/${file.filename}`,
-          isMain: false
-        }));
-        updatedImages = [...updatedImages, ...newImages];
-      }
-
-      // 5. Set main image
-      updatedImages.forEach(img => {
-        img.isMain = img._id?.toString() === newMainImageId;
-      });
-
-      // Ensure at least one main image
-      if (!updatedImages.some(img => img.isMain)) {
-        updatedImages[0].isMain = true;
-      }
-
-      // 6. Update product
-      await Product.findByIdAndUpdate(
-        req.params.id,
-        {
-          name: req.body.name,
-          description: req.body.description,
-          category: req.body.category,
-          images: updatedImages
-        },
-        { new: true, runValidators: true }
-      );
-
-      // 7. Cleanup deleted images
-      const deletedImages = currentImages.filter(img => 
-        !imagesToKeep.includes(img._id.toString())
-      );
-      cleanupImages(deletedImages);
-
-      req.flash('success', 'Product updated successfully');
-      res.redirect('/admin/products/list');
-
-    } catch (err) {
-      // Cleanup any uploaded files if error occurred
-      if (req.files) {
-        cleanupFiles(req.files);
-      }
-      
-      req.flash('error', err.message);
-      res.redirect(`/admin/products/edit/${req.params.id}`);
+app.put('/api/products/:id', isAdmin, upload.single('image'), async (req, res) => {
+  try {
+    // Validate required fields
+    if (!req.body.name || !req.body.description || !req.body.category) {
+      req.flash('error', 'Name, description and category are required');
+      return res.redirect(`/admin/products/edit/${req.params.id}`);
     }
-  });
+
+    const updateData = {
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+    };
+
+    // Handle image update
+    if (req.file) {
+    updateData.image = `/uploads/${req.file.filename}`;
+    
+    // Delete old image if exists
+    const oldProduct = await Product.findById(req.params.id);
+    if (oldProduct.image && !oldProduct.image.includes('default-product')) {
+      const oldImagePath = path.join(__dirname, '../public', oldProduct.image);
+      fs.unlink(oldImagePath, err => {
+        if (err) console.error('Error deleting old image:', err);
+      });
+    }
+  }
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+    
+    if (!product) {
+      return res.redirect('/admin/products/list');
+    }
+    res.redirect('/admin/products/list');
+  } catch (err) {
+    console.error(err);
+    res.redirect(`/admin/products/edit/${req.params.id}`);
+  }
 });
-
-function cleanupImages(images) {
-  images.forEach(img => {
-    if (!img.url.includes('default-product')) {
-      const imagePath = path.join(__dirname, '../../public', img.url);
-      fs.unlink(imagePath, err => {
-        if (err) console.error('Error deleting image:', err);
-      });
-    }
-  });
-}
-
-function cleanupFiles(files) {
-  files.forEach(file => {
-    fs.unlinkSync(path.join(__dirname, '../../public/uploads', file.filename));
-  });
-}
 // ==================================
 
 // =================================
 // Delete product
 app.delete('/api/products/:id', isAdmin, async (req, res) => {
   try {
-    // First find the product to get image references
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
       req.flash('error', 'Product not found');
       return res.redirect('/admin/products/list');
     }
-    await Product.findByIdAndDelete(req.params.id);
 
-    // Handle image deletion (synchronously for simplicity)
-    if (product.images && product.images.length > 0) {
-      for (const image of product.images) {
-        if (image.url && !image.url.includes('default-product')) {
-          const imagePath = path.join(__dirname, '../../public', image.url);
-          try {
-            if (fs.existsSync(imagePath)) {
-              fs.unlinkSync(imagePath);
-              console.log('Deleted image:', imagePath);
-            }
-          } catch (err) {
-            console.error('Error deleting image:', imagePath, err);
-          }
-        }
-      }
+    // Optional: Delete associated image file
+    if (product.image && !product.image.includes('default-product')) {
+      const imagePath = path.join(__dirname, '../public', product.image);
+      fs.unlink(imagePath, err => {
+        if (err) console.error('Error deleting image:', err);
+      });
     }
 
     req.flash('success', 'Product deleted successfully');
@@ -441,7 +321,6 @@ app.delete('/api/products/:id', isAdmin, async (req, res) => {
 });
 // ==================================
 // END PRODUCT ROUTES =================
-
 
 
 // ======================
@@ -510,19 +389,15 @@ app.get('/admin/products/edit/:id', isAdmin, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      req.flash('error', 'Product not found');
-      return res.redirect('/admin/products/list');
+      return res.redirect('/admin/products');
     }
-    
     res.render('admin/products/edit', {
       title: 'Edit Product',
-      product,
-      remainingImageSlots: 4 - (product.images?.length || 0) // Add this line
+      product
     });
   } catch (err) {
     console.error(err);
-    req.flash('error', 'Failed to load product');
-    res.redirect('/admin/products/list');
+    res.redirect('/admin/products');
   }
 });
 // =====================
@@ -535,6 +410,102 @@ app.get('/admin/logout', (req, res) => {
 });
 // END ADMIN ROUTES ====================
 
+// TERMS PAGE ROUTE ======================
+app.get('/terms', (req, res) => {
+  res.render('pages/terms', {
+    title: 'Terms and Conditions - Maria Fashion Design'
+  });
+});
+// END TERMS PAGE ROUTE ===================
+
+
+// ======================
+// CONTACT FORM HANDLER
+// ======================
+// Add this route after your terms route and before product routes
+
+app.post('/contact', async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !message) {
+      req.flash('error', 'Namn, e-post och meddelande krävs');
+      return res.redirect('/#contact');
+    }
+
+    // Email to admin (you)
+    const adminMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.ADMIN_EMAIL,
+      subject: `Ny kontakt från ${name}: ${subject || 'Inget ämne'}`,
+      html: `
+        <h2>Ny kontaktförfrågan från Maria Fashion Design</h2>
+        <p><strong>Namn:</strong> ${name}</p>
+        <p><strong>E-post:</strong> ${email}</p>
+        <p><strong>Ämne:</strong> ${subject || 'Inget ämne'}</p>
+        <p><strong>Meddelande:</strong></p>
+        <p>${message.replace(/\n/g, '<br>')}</p>
+        <hr>
+        <p><em>Detta meddelande skickades från Maria Fashion Design kontaktformulär</em></p>
+        <p><em>Svarstid: ${new Date().toLocaleString('sv-SE')}</em></p>
+      `
+    };
+
+    // Confirmation email to user
+    const userMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Tack för ditt meddelande - Maria Fashion Design',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #d4a574; text-align: center;">Tack för ditt meddelande!</h2>
+          
+          <p>Hej ${name},</p>
+          
+          <p>Tack för att du kontaktade <strong>Maria Fashion Design</strong>. Vi har tagit emot ditt meddelande och kommer att återkomma till dig så snart som möjligt.</p>
+          
+          <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #d4a574; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Din förfrågan:</h3>
+            <p><strong>Ämne:</strong> ${subject || 'Inget ämne'}</p>
+            <p><strong>Meddelande:</strong></p>
+            <p style="font-style: italic;">${message.replace(/\n/g, '<br>')}</p>
+          </div>
+          
+          <p>Vi strävar efter att svara inom <strong>24 timmar</strong> på vardagar.</p>
+          
+          <div style="background-color: #d4a574; color: white; padding: 15px; text-align: center; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 0;">Följ oss för de senaste modekreationerna!</p>
+          </div>
+          
+          <p>Med vänliga hälsningar,<br>
+          <strong>Maria Fashion Design Team</strong></p>
+          
+          <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+          <p style="font-size: 12px; color: #666; text-align: center;">
+            Detta är ett automatiskt meddelande från Maria Fashion Design.<br>
+            Vänligen svara inte direkt på detta e-postmeddelande.
+          </p>
+        </div>
+      `
+    };
+
+    // Send both emails
+    await Promise.all([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(userMailOptions)
+    ]);
+
+    console.log(`Contact form submitted by ${name} (${email}) at ${new Date().toLocaleString('sv-SE')}`);
+    req.flash('success', 'Tack för ditt meddelande! Vi återkommer till dig snart. 📧');
+    res.redirect('/#contact');
+
+  } catch (error) {
+    console.error('Contact form error:', error);
+    req.flash('error', 'Ett fel uppstod när meddelandet skickades. Försök igen senare. ❌');
+    res.redirect('/#contact');
+  }
+});
 
 // ======================
 // Error Handling
